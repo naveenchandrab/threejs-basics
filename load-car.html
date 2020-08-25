@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Loading Car</title>
-		<link rel="stylesheet" href="app.css" />
+		<link rel="stylesheet" href="./styles/app.css" />
 	</head>
 	<body>
 		<script src="./three.min.js"></script>
@@ -64,7 +64,7 @@
 			const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 			const loader = new THREE.GLTFLoader();
-			loader.load('./Car/scene.gltf', function (gltf) {
+			loader.load('./assets/models/car/scene.gltf', function (gltf) {
 				scene.add(gltf.scene);
 				scene.traverse((object) => {
 					if (object.name === 'Plane035__0') object.material.opacity = 0;

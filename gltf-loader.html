@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="app.css" />
+		<link rel="stylesheet" href="./styles/app.css" />
 		<title>Three JS Basics</title>
 	</head>
 	<body>
@@ -37,7 +37,9 @@
 			controls.minZoom = 1.5;
 
 			const loader = new THREE.GLTFLoader();
-			loader.load('GasStation.gltf', function (gltf) {
+			loader.load('./assets/models/gas-station/GasStation.gltf', function (
+				gltf
+			) {
 				gltf.scene.scale.set(0.3, 0.3, 0.3);
 				scene.add(gltf.scene);
 
