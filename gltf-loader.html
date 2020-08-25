@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="app.css" />
+		<title>Three JS Basics</title>
+	</head>
+	<body>
+		<script src="./three.min.js"></script>
+		<script src="./GLTFLoader.js"></script>
+		<script src="./OrbitControls.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+
+			const camera = new THREE.PerspectiveCamera(
+				40,
+				window.innerWidth / window.innerHeight,
+				1,
+				100
+			);
+			camera.position.set(0, 2, 5);
+
+			const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+			scene.add(ambientLight);
+
+			const pointerLight = new THREE.PointLight(0xffffff, 1, 100);
+			pointerLight.position.set(30, 30, 30);
+			scene.add(pointerLight);
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setClearColor('#cccccc', 1);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+			const controls = new THREE.OrbitControls(camera, renderer.domElement);
+			controls.minZoom = 1.5;
+
+			const loader = new THREE.GLTFLoader();
+			loader.load('GasStation.gltf', function (gltf) {
+				gltf.scene.scale.set(0.3, 0.3, 0.3);
+				scene.add(gltf.scene);
+
+				function animate() {
+					gltf.scene.rotation.y += 0.0004;
+					renderer.render(scene, camera);
+					requestAnimationFrame(animate);
+				}
+
+				animate();
+			});
+		</script>
+	</body>
+</html>
