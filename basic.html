@@ -7,10 +7,11 @@
 		<title>Three JS Basics</title>
 	</head>
 	<body>
-		<script src="./libs/three.min.js"></script>
-		<script src="./libs/GLTFLoader.js"></script>
-		<script src="./libs/OrbitControls.js"></script>
-		<script>
+		<script type="module">
+			import * as THREE from "https://unpkg.com/three@0.120.0/build/three.module.js";
+			import { OrbitControls } from 'https://unpkg.com/three@0.120.0/examples/jsm/controls/OrbitControls.js';
+			import { RoomEnvironment } from 'https://unpkg.com/three@0.120.0/examples/jsm/environments/RoomEnvironment.js';
+
 			const scene = new THREE.Scene();
 
 			const camera = new THREE.PerspectiveCamera(
@@ -35,8 +36,19 @@
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			document.body.appendChild(renderer.domElement);
 
-			const controls = new THREE.OrbitControls(camera, renderer.domElement);
+			const controls = new OrbitControls(camera, renderer.domElement);
 			controls.minZoom = 1.5;
+
+			// Load in default scene for environment maps
+			const environmentScene = new RoomEnvironment();
+			// Initialize pmremgenerator to generate environmentmaps
+			const PMREMGenerator = new THREE.PMREMGenerator(renderer);
+			const environmentMap = PMREMGenerator.fromScene(environmentScene);
+
+			// Assign environment maps
+			scene.environment = environmentMap.texture;
+			// Assign skybox
+			scene.background = environmentMap.texture;
 
 			const geometry = new THREE.BoxGeometry(1, 1, 1);
 			const material = new THREE.MeshPhysicalMaterial({ color: 'green' });
