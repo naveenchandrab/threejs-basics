@@ -7,10 +7,11 @@
 		<link rel="stylesheet" href="./styles/app.css" />
 	</head>
 	<body>
-		<script src="./libs/three.min.js"></script>
-		<script src="./libs/OrbitControls.js"></script>
-		<script src="./libs/GLTFLoader.js"></script>
-		<script>
+		<script type="module">
+			import * as THREE from "https://unpkg.com/three@0.120.0/build/three.module.js";
+			import { OrbitControls } from 'https://unpkg.com/three@0.120.0/examples/jsm/controls/OrbitControls.js';
+			import { GLTFLoader } from "https://unpkg.com/three@0.120.0/examples/jsm/loaders/GLTFLoader.js";
+			import { RoomEnvironment } from 'https://unpkg.com/three@0.120.0/examples/jsm/environments/RoomEnvironment.js';
 			const scene = new THREE.Scene();
 
 			const camera = new THREE.PerspectiveCamera(
@@ -63,17 +64,29 @@
 			renderer.setClearColor('#cccccc', 1);
 			document.body.appendChild(renderer.domElement);
 
-			const controls = new THREE.OrbitControls(camera, renderer.domElement);
+			// Load in default scene for environment maps
+			const environmentScene = new RoomEnvironment();
+			// Initialize pmremgenerator to generate environmentmaps
+			const PMREMGenerator = new THREE.PMREMGenerator(renderer);
+			const environmentMap = PMREMGenerator.fromScene(environmentScene);
+
+			// Assign environment maps
+			scene.environment = environmentMap.texture;
+			// Assign skybox
+			scene.background = environmentMap.texture;
+
+			const controls = new OrbitControls(camera, renderer.domElement);
 			controls.minDistance = 5;
 			controls.maxDistance = 5;
 
-			const loader = new THREE.GLTFLoader();
+			const loader = new GLTFLoader();
 			loader.load('./assets/models/car/scene.gltf', function (gltf) {
 				gltf.scene.position.x = 0.38;
 				scene.add(gltf.scene);
-				scene.traverse((object) => {
-					if (object.name === 'Plane035__0') object.material.opacity = 0;
-				});
+				const planeObject = scene.getObjectByName('Plane035__0');
+				if (planeObject) {
+					planeObject.material.opacity = 0;
+				}
 				animate();
 			});
 
