@@ -21,6 +21,8 @@
 			);
 			camera.position.z = 6;
 
+			scene.add(new THREE.AxisHelper(500));
+
 			const ambientLight = new THREE.AmbientLight(0xc4c4c4, 5);
 			ambientLight.position.set(0, 10, 10);
 			scene.add(ambientLight);
@@ -62,9 +64,12 @@
 			document.body.appendChild(renderer.domElement);
 
 			const controls = new THREE.OrbitControls(camera, renderer.domElement);
+			controls.minDistance = 5;
+			controls.maxDistance = 5;
 
 			const loader = new THREE.GLTFLoader();
 			loader.load('./assets/models/car/scene.gltf', function (gltf) {
+				gltf.scene.position.x = 0.38;
 				scene.add(gltf.scene);
 				scene.traverse((object) => {
 					if (object.name === 'Plane035__0') object.material.opacity = 0;
